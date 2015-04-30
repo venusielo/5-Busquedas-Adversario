@@ -40,52 +40,6 @@ class Conecta4(juegos_cuadricula.Juego2ZT):
         juegos_cuadricula.Juego2ZT.__init__(self,
                                             7, 6,
                                             tuple([0 for _ in range(42)]))
-        self.bases = range(35, 42)
-
-        def f_combinaciones(pos):
-            """
-            Funcion interna para encontrar todas
-            las combinaciones de una posición
-
-            """
-            combinaciones = []
-            # Columna
-            if pos < 21:
-                combinaciones.append(range(pos, pos + 22, 7))
-            # Renglones y diagonales
-            for i in range(0, 4):
-                if 0 <= pos % 7 - i < 4:
-                    # Renglones
-                    combinaciones.append(range(pos - i, pos - i + 4))
-                    # Diagonal hacia abajo
-                    pos_d = pos - 8 * i
-                    if 0 <= pos_d < 18:
-                        combinaciones.append(range(pos_d, pos_d + 25, 8))
-                    # Diagonal hacia arriba
-                    pos_d = pos + 6 * i
-                    if 20 < pos_d < 39:
-                        combinaciones.append(range(pos_d, pos_d - 19, -6))
-            return tuple(combinaciones)
-
-        self.combinaciones = {i: f_combinaciones(i) for i in range(42)}
-
-    def indice0(tupla):
-        "Como index pero regresa None, si no hay lugares vacios"
-        try:
-            return tupla.index(0)
-        except ValueError:
-            return None
-
-    def encuentra_vacios(self, estado):
-        """
-        Encuentra los valores vacios al inicio de cada columna
-
-        @param estado: Una tupla con el estado
-
-        @return: Una lista con los ligares donde se puede colocar una ficha
-        """
-        return [base - (7 * self.indice0(estado[base::-7]))
-                for base in self.bases]
 
     def jugadas_legales(self, estado, jugador):
         """
@@ -102,8 +56,19 @@ class Conecta4(juegos_cuadricula.Juego2ZT):
                  donde ai es la posición donde se le puede agregar una ficha
 
         """
-        return [(None, pos)
-                for pos in self.encuentra_vacios(estado) if pos is not None]
+        def indice0(tupla):
+            "Como index pero regresa None, si no hay lugares vacios"
+            try:
+                return tupla.index(0)
+            except ValueError:
+                return None
+
+        def vacios(s):
+            for base in range(35, 42):
+                indice = indice0(estado[base::-7])
+                yield None if indice is None else base - (7 * indice)
+
+        return [(None, pos) for pos in vacios(estado) if pos is not None]
 
     def estado_terminal(self, estado):
         """
@@ -111,19 +76,33 @@ class Conecta4(juegos_cuadricula.Juego2ZT):
         agregar una nueva ficha o si algun jugador completo 4 puntos
 
         """
-        if sum(abs(estado)) < 7:
-            return None
+        def p(renglon, columna):
+            return 7 * renglon + columna
 
-        indices = self.encuentra_vacios(estado)
-        for indice in indices:
-            if indice < 35:
-                pos = indice - 7
-                for combinacion in self.combinaciones[pos]:
-                    if all(estado[i] == estado[pos] for i in combinacion):
-                        return estado[pos]
-        if all(x is None for x in indices):
-            return 0
-        return None
+        def checa(s, p, inc):
+            return abs(sum([s[p + i] for i in range(0, 4 * inc, inc)])) == 4
+
+        def horiz(s, p):
+            return checa(s, p, 1)
+
+        def diag_izq(s, p):
+            return checa(s, p, 8)
+
+        def diag_der(s, p):
+            return checa(s, p, 6)
+
+        def vertical(s, p):
+            return checa(s, p, 7)
+
+        for r in range(6):
+            for c in range(7):
+                if ((c < 4 and horiz(estado, p(r, c))) or
+                    (r < 3 and
+                     ((vertical(estado, p(r, c))) or
+                      (c < 4 and diag_izq(estado, p(r, c))) or
+                      (c > 2 and diag_der(estado, p(r, c)))))):
+                    return estado[p(r, c)]
+        return None if 0 in estado else 0
 
     def hacer_jugada(self, estado, jugada, jugador):
         """
@@ -197,13 +176,15 @@ class JugadorConecta4(juegos_cuadricula.JugadorNegamax):
         self.dmax = 0
         t_ini = time.time()
         while time.time() - t_ini < self.tiempo and self.dmax < self.maxima_d:
-            jugada = max(self.ordena(juego, estado, juego.jugadas_legales(estado, jugador)),
+            jugada = max(self.ordena(juego,
+                                     estado,
+                                     juego.jugadas_legales(estado, jugador)),
                          key=lambda jugada: -self.negamax(juego,
-                                                    estado=juego.hacer_jugada(estado, jugada, jugador),
-                                                    jugador=-jugador,
-                                                    alpha=-1e10,
-                                                    beta=1e10,
-                                                    profundidad=self.dmax))
+                                                          estado=juego.hacer_jugada(estado, jugada, jugador),
+                                                          jugador=-jugador,
+                                                          alpha=-1e10,
+                                                          beta=1e10,
+                                                          profundidad=self.dmax))
             # print "A profundad ", self.dmax, " la mejor jugada es ", jugada
             self.dmax += 1
         return jugada
@@ -213,6 +194,6 @@ if __name__ == '__main__':
     # Ejemplo donde empieza el jugador humano
     juego = juegos_cuadricula.InterfaseTK(Conecta4(),
                                           juegos_cuadricula.JugadorHumano(),
-                                          JugadorConecta4(2),
+                                          JugadorConecta4(4),
                                           1)
     juego.arranca()
