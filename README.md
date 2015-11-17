@@ -1,6 +1,6 @@
 # Tarea 6: Búsquedas con adversarios
 
-**Fecha de entrega: 23 de mayo de 2015**
+**Fecha de entrega: 10 de diciembre de 2015**
 
 ## Objetivos
 
