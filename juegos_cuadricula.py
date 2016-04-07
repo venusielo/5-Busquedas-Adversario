@@ -390,7 +390,7 @@ class JugadorNegamax(JugadorInterfazTK):
                                              beta=-alpha,
                                              profundidad=profundidad - 1))
             if alpha >= beta:
-                return alpha
+                return beta
         return alpha
 
     def ordena(self, juego, estado, jugadas):
