@@ -9,6 +9,8 @@ Modulo para la implementación de una clase de juegos de cuadrícula.
 Se asumen juegos de cuadricula, totalmente observables,
 de dos jugadores, por turnos
 
+Es una implementación realmente de pena
+
 """
 from tkMessageBox import showinfo
 import Tkinter as tk
@@ -26,10 +28,9 @@ class Juego2ZT:
     Recuerda TODOS los métodos (incluido __init__)
     hay que implementarlo para cada juego específico.
 
-    Como ejemplo, con el fin de dejar mas claro lo que hay que hacer aqui,
-    se incluye el juego del gato como juego por default. Toma en cuenta que
-    el juego del gato es extremadamente simple y tu juego será algo mas
-    complicado siempre.
+    Cabe aclarar que este código tiene fines didácticos y es muy ineficiente,
+    no se usar estructuras de datos ni métodos con muchos efectos colaterales
+    con el fin de dejar bien claro el algoritmo de búsqueda.
 
     """
 
@@ -109,7 +110,9 @@ class InterfaseTK:
     Clase para implementar cualquier juego de tablero con fichas rojas
     y negras. Por el momento solo se tienen contempladas las imagenes
     para fichas -2, -1, 0, 1, 2, pero se espera poder hacer otro tipo
-    de fichas tambien
+    de fichas tambien.
+
+    Es una visualización muy penosa pero es lo que hay :-)
 
     """
     def __init__(self, juego, jugador1, jugador2, escala):
