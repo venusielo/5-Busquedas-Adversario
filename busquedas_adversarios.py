@@ -15,6 +15,8 @@ Se ilustra con el juego del gato
 
 """
 
+from time import perf_counter
+
 
 class JuegoSumaCeros2T:
     """
@@ -69,7 +71,7 @@ class JuegoSumaCeros2T:
         raise NotImplementedError("Hay que desarrollar este método, pues")
 
 
-def minimax(juego, dmax=100, utilidad=None, ordena_jugadas=None):
+def minimax(juego, dmax=100, utilidad=None, ordena_jugadas=None, transp=None):
     """
     Escoje una jugada legal para el jugador en turno, utilizando el
     método de minimax a una profundidad máxima de dmax, con una función de
@@ -87,10 +89,11 @@ def minimax(juego, dmax=100, utilidad=None, ordena_jugadas=None):
 
     return max((a for a in ordena_jugadas(juego)),
                key=lambda a: min_val(juego, a, dmax, utilidad, ordena_jugadas,
-                                     -1e10, 1e10, juego.jugador))
+                                     -1e10, 1e10, juego.jugador, transp))
 
 
-def min_val(juego, jugada, d, utilidad, ordena_jugadas, alfa, beta, primero):
+def min_val(juego, jugada, d, utilidad, ordena_jugadas,
+            alfa, beta, primero, transp):
 
     juego.hacer_jugada(jugada)
 
@@ -98,21 +101,31 @@ def min_val(juego, jugada, d, utilidad, ordena_jugadas, alfa, beta, primero):
     if ganancia is not None:
         juego.deshacer_jugada()
         return primero * ganancia
+
     if d == 0:
-        u = utilidad(juego)
+        u = utilidad(juego.x)
         juego.deshacer_jugada()
         return primero * u
 
+    if transp is not None and tuple(juego.x) in transp:
+        val_tt, d_tt, tipo_tt = transp[tuple(juego.x)]
+        if d_tt >= d and tipo_tt is 'beta':
+            beta = min(alfa, val_tt)
+
     for jugada_nueva in ordena_jugadas(juego):
         beta = min(beta, max_val(juego, jugada_nueva, d - 1, utilidad,
-                                 ordena_jugadas, alfa, beta, primero))
+                                 ordena_jugadas, alfa, beta, primero, transp))
         if beta <= alfa:
             break
+    else:
+        if transp is not None:
+            transp[tuple(juego.x)] = (d, beta, 'beta')
     juego.deshacer_jugada()
     return beta
 
 
-def max_val(juego, jugada, d, utilidad, ordena_jugadas, alfa, beta, primero):
+def max_val(juego, jugada, d, utilidad, ordena_jugadas,
+            alfa, beta, primero, transp):
 
     juego.hacer_jugada(jugada)
 
@@ -120,15 +133,36 @@ def max_val(juego, jugada, d, utilidad, ordena_jugadas, alfa, beta, primero):
     if ganancia is not None:
         juego.deshacer_jugada()
         return primero * ganancia
+
     if d == 0:
-        u = utilidad(juego)
-        juego.deshacer_jugada(juego)
+        u = utilidad(juego.x)
+        juego.deshacer_jugada()
         return primero * u
+
+    if transp is not None and tuple(juego.x) in transp:
+        val_tt, d_tt, tipo_tt = transp[tuple(juego.x)]
+        if d_tt >= d and tipo_tt is 'alfa':
+            alfa = max(alfa, val_tt)
 
     for jugada_nueva in ordena_jugadas(juego):
         alfa = max(alfa, min_val(juego, jugada_nueva, d - 1, utilidad,
-                                 ordena_jugadas, alfa, beta, primero))
+                                 ordena_jugadas, alfa, beta, primero, transp))
         if beta <= alfa:
             break
+    else:
+        if transp is not None:
+            transp[tuple(juego.x)] = (d, alfa, 'alfa')
     juego.deshacer_jugada()
     return alfa
+
+
+def minimax_t(juego, tmax=5, utilidad=None, ordena_jugadas=None, transp=None):
+
+    bf = len(list(juego.jugadas_legales()))
+    t_ini = perf_counter()
+    for d in range(2, 50):
+        ta = perf_counter()
+        jugada = minimax(juego, d, utilidad, ordena_jugadas, transp=None)
+        tb = perf_counter()
+        if bf * (tb - ta) > t_ini + tmax - tb:
+            return jugada

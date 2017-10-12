@@ -6,6 +6,7 @@ from busquedas_adversarios import JuegoSumaCeros2T
 from busquedas_adversarios import minimax
 import tkinter as tk
 
+
 class Gato(JuegoSumaCeros2T):
     """
     El juego del gato para ilustrar los modelos de juegos
@@ -110,11 +111,11 @@ def pprint_gato(x):
 
 
 class GatoTK:
-    def __init__(self, escala=1):
+    def __init__(self, escala=2):
 
         self.app = app = tk.Tk()
         self.app.title("El juego del gato")
-        self.L = L = int(escala) * 100
+        self.L = L = int(escala) * 50
 
         tmpstr = "Escoge, X siempre empiezan"
         self.anuncio = tk.Message(app, bg='white', borderwidth=1,
@@ -214,7 +215,6 @@ class GatoTK:
                                               text=' xo'[x[i]])
                 self.tablero[i].val = x[i]
                 self.tablero[i].update()
-
 
     def arranca(self):
         self.app.mainloop()
