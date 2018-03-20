@@ -144,7 +144,7 @@ class GatoTK:
                                         bg='light grey', borderwidth=0)
             self.tablero[i].grid(row=i // 3, column=i % 3)
             self.textos[i] = self.tablero[i].create_text(L // 2, L // 2,
-                                                         font= letra, text=' ')
+                                                         font=letra, text=' ')
             self.tablero[i].val = 0
             self.tablero[i].pos = i
 
