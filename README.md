@@ -1,25 +1,28 @@
-# Tarea 6: Búsquedas con adversarios
+![](ia.png)
+
+# Búsquedas con adversarios (minimax)
+
+**Evaluación de competencias 5**
+
 
 ## Objetivos
 
 1. Reforzar los conocimientos de los métodos de búsquedas por
-   adversarios, en particular el algoritmo Minimax con poda alpha-beta
-   en su versión para dos jugadores por turnos, conocida como
-   `negamax`.
+   adversarios, en particular el algoritmo Minimax con poda $\alpha$-$\beta$
+   en su versión para dos jugadores por turnos.
 
 2. Desarrollar habilidades para establecer heurísticas de ordenamiento
    de jugadas con el fin de reducr los tiempos de búsqueda.
 
 3. Desarrollar habilidades y conocimientos para establecer medidas de
    estimación de utilidad, al aprender a generar funciones de
-   características y establecer pesos entre estos.
+   características y establecer pesos entre estos. Aplicarlo a dos juegos
+   (conecta 4 y Ultimate Tic-Tac-Toe)
 
 4. Desarrollar un juego simple (Othello) con motor de IA desde cero.
 
-Adicionalmente, en los programas se intenta mostrar un punto de vista
-más orientado al paradigma funcional en Python, utilizando a las
-clases únicamente como contenedores de funciones para un tipo de datos
-particulares (el juego).
+Adicionalmente, en los programas se intenta mostrar un estilo de programación
+más orientado al paradigma funcional.
 
 Si bien se proporcionan las herramientas y ejemplos necesarios para
 comprender los rudimentos básicos de programación de interfases en
@@ -44,7 +47,14 @@ adicional que se espera reforzar con la tarea.
    ofrece el juego programado. Dentro del metodo hay dos funciones muy
    malas que impactan mucho en la calidad del juego: `ordena_jugadas`
    y `utilidad_c4`.  Desarrolla tu propias funciones con el fin de
-   lograr mejores búsquedas a mayor profundidad (40 puntos).
+   lograr mejores búsquedas a mayor profundidad (20 puntos).
+
+3. En el archivo `ultimate_tictactoe.py` se incluye el juego de
+   Ùltimate Tic-Tac-Toe` o `Meta Gato`. Este juego por el momento se juega
+   entre dos usuarios porque no cuenta ni con función de utilidad, 
+   ni con heurísticas que le permitan al minimax jugar eficientemente.
+   Agrega función de utilidad y heurísticas para que se pueda jugar contra la 
+   computadora, y luego modifica la interfaz gráfica (20 puntos).
 
 4. El archivo `othello.py` es un archivo completamente en
    blanco. Desarrolla todo lo necesario para un juego de
