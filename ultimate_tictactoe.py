@@ -53,18 +53,24 @@ class MetaGato(JuegoSumaCeros2T):
         gato = self.x[-1]
         if gato is None:
             return range(81)
-        return [i for i in range(9*gato, 9*gato + 9) if self.x[i] == 0]
+        if self.metagato[gato] == 0 and 0 in self.x[gato*9: gato*9+9]:
+            return [i for i in range(9*gato, 9*gato + 9) if self.x[i] == 0]
+        return ([i for i in range(81) if self.x[i] == 0 and
+                    self.metagato[i//9] == 0])
 
+    # Error: self.historial[-1][1] me da ciertos errores
     def terminal(self):
         if 0 not in self.x:
             return 0
         gato = self.historial[-1][1]
+
         x = self.x[9 * gato: 9 * gato + 9]
         if self.metagato[gato] == 0:
             self.metagato[gato] = self.final_gato(x)
         res = self.final_gato(self.metagato)
         return None if res == 0 else res
 
+    # Supongo que final_gato dictamina si hay metagato
     @staticmethod
     def final_gato(x):
         if x[4] != 0 and (x[0] == x[4] == x[8] or x[2] == x[4] == x[6]):
@@ -79,7 +85,9 @@ class MetaGato(JuegoSumaCeros2T):
     def hacer_jugada(self, jugada):
         if self.x[-1] is None:
             self.x[-1] = jugada // 9
-        self.historial.append((jugada, self.x[-1]))
+        # Error fatal: hay que considerar los casos en los que no vas a jugar
+        # donde deberias jugar
+        self.historial.append((jugada, jugada//9))
         self.x[jugada] = self.jugador
         self.x[-1] = jugada % 9
         self.jugador *= -1
