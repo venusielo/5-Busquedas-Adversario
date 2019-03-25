@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-othello.py
+timbiriche.py
 ------------
 
-El juego de Otello implementado por ustes mismos, con jugador inteligente
+El juego de Timbiriche implementado por ustedes mismos, con jugador inteligente
 
 """
 
