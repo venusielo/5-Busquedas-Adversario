@@ -19,7 +19,7 @@
    características y establecer pesos entre estos. Aplicarlo a dos juegos
    (conecta 4 y Ultimate Tic-Tac-Toe)
 
-4. Desarrollar un juego simple (Othello) con motor de IA desde cero.
+4. Desarrollar un juego simple (timbiriche) con motor de IA desde cero.
 
 Adicionalmente, en los programas se intenta mostrar un estilo de programación
 más orientado al paradigma funcional.
@@ -49,16 +49,9 @@ adicional que se espera reforzar con la tarea.
    y `utilidad_c4`.  Desarrolla tu propias funciones con el fin de
    lograr mejores búsquedas a mayor profundidad (20 puntos).
 
-3. En el archivo `ultimate_tictactoe.py` se incluye el juego de
-   Ùltimate Tic-Tac-Toe` o `Meta Gato`. Este juego por el momento se juega
-   entre dos usuarios porque no cuenta ni con función de utilidad, 
-   ni con heurísticas que le permitan al minimax jugar eficientemente.
-   Agrega función de utilidad y heurísticas para que se pueda jugar contra la 
-   computadora, y luego modifica la interfaz gráfica (20 puntos).
-
-4. El archivo `othello.py` es un archivo completamente en
+3. El archivo `timbiriche.py` es un archivo completamente en
    blanco. Desarrolla todo lo necesario para un juego de
-   [Othello](http://en.wikipedia.org/wiki/Reversi). Todas las
+   [Tmbiriche (Dots and Boxes en inglés)](https://en.wikipedia.org/wiki/Dots_and_Boxes). Todas las
    decisiones son tuyas. No importa que juegue lento, pero que el
    ordenamiento y las funciones de utilidad hagan que jugar contra el
    motor de IA sea muy dificil de ganar (60 puntos).
