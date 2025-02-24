@@ -221,5 +221,5 @@ class GatoTK:
 
 
 if __name__ == '__main__':
-    # juega_gato('X')
-    GatoTK().arranca()
+    juega_gato('O')
+    # GatoTK().arranca()
