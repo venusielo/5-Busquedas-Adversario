@@ -7,8 +7,6 @@ from juegos_simplificado import ModeloJuegoZT2
 from juegos_simplificado import juega_dos_jugadores
 from juegos_simplificado import minimax
 
-from time import perf_counter
-
 class Gato(ModeloJuegoZT2):
     """
     El juego del gato 
