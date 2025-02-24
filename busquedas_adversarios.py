@@ -7,12 +7,6 @@ busquedas_adversarios.py
 
 Modulo con las funciones genericas para la búsqueda con adversarios
 
-Para hacerlo orientado a objetos y pasar toda la información por
-referencia (y hacer un poco más rápido el juego) vamos a mantener
-el estado del juego y el jugador actual dentro del juego.
-
-Se ilustra con el juego del gato
-
 """
 
 from time import perf_counter
