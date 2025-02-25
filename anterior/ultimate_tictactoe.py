@@ -13,8 +13,8 @@ https://en.wikipedia.org/wiki/Ultimate_tic-tac-toe
 
 """
 
-from busquedas_adversarios import JuegoSumaCeros2T
-from busquedas_adversarios import minimax
+from anterior.busquedas_adversarios import JuegoSumaCeros2T
+from anterior.busquedas_adversarios import minimax
 import tkinter as tk
 
 

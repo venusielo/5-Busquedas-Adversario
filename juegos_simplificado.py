@@ -4,6 +4,8 @@ Modulo para las clases básicas para realizar un jkuego de forma muy simplificad
 Vamos a usar una orientación funcional en este modulo
 
 """
+
+from random import shuffle
     
 class ModeloJuegoZT2:
     """
@@ -81,7 +83,13 @@ def minimax(juego, estado, jugador):
             return j * juego.ganancia(estado)
         v = -1e10
         for a in juego.jugadas_legales(estado, jugador):
-            v = max(v, min_val(juego.transicion(estado, a, jugador), -jugador))
+            v = max(
+                v, 
+                min_val(
+                    juego.transicion(estado, a, jugador), 
+                    -jugador
+                )
+            )
         return v
     
     def min_val(estado, jugador):
@@ -89,9 +97,85 @@ def minimax(juego, estado, jugador):
             return j * juego.ganancia(estado)
         v = 1e10
         for a in juego.jugadas_legales(estado, jugador):
-            v = min(v, max_val(juego.transicion(estado, a, jugador), -jugador))
+            v = min(
+                v, 
+                max_val(
+                    juego.transicion(estado, a, jugador), 
+                    -jugador
+                )
+            )
         return v
     
-    return max(juego.jugadas_legales(estado, jugador),
-               key=lambda a: min_val(juego.transicion(estado, a, jugador), -jugador))
+    return max(
+        juego.jugadas_legales(estado, jugador),
+        key=lambda a: min_val(
+            juego.transicion(estado, a, jugador), 
+            -jugador
+            )
+        )
     
+
+def alpha_beta(juego, estado, jugador, ordena=None):
+    """
+    Devuelve la mejor jugada para el jugador en el estado
+    
+    """
+    j = jugador
+    def max_val(estado, jugador, alpha, beta):
+        if juego.terminal(estado):
+            return j * juego.ganancia(estado)
+        v = -1e10
+        jugadas = list(juego.jugadas_legales(estado, jugador))
+        if ordena:
+            jugadas = ordena(jugadas)
+        else:
+            shuffle(jugadas)
+        for a in jugadas:
+            v = max(
+                v, 
+                min_val(
+                    juego.transicion(estado, a, jugador), 
+                    -jugador, 
+                    alpha, beta
+                )
+            )
+            if v >= beta:
+                return v
+            alpha = max(alpha, v)
+        return v
+    
+    def min_val(estado, jugador, alpha, beta):
+        if juego.terminal(estado):
+            return j * juego.ganancia(estado)
+        v = 1e10
+        jugadas = list(juego.jugadas_legales(estado, jugador))
+        if ordena:
+            jugadas = ordena(jugadas)
+        else:
+            shuffle(jugadas)
+        for a in jugadas:
+            v = min(
+                v, 
+                max_val(
+                    juego.transicion(estado, a, jugador), 
+                    -jugador, 
+                    alpha, beta
+                )
+            )
+            if v <= alpha:
+                return v
+            beta = min(beta, v)
+        return v
+    
+    jugadas = list(juego.jugadas_legales(estado, jugador))
+    if ordena:
+        jugadas = ordena(jugadas)
+    else:
+        shuffle(jugadas)
+    return max(
+        jugadas,
+        key=lambda a: min_val(
+                juego.transicion(estado, a, jugador), 
+                -jugador, 
+                -1e10, 1e10
+            ))

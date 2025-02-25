@@ -1,5 +1,5 @@
-from busquedas_adversarios import JuegoSumaCeros2T
-from busquedas_adversarios import minimax, alpha_beta
+from anterior.busquedas_adversarios import JuegoSumaCeros2T
+from anterior.busquedas_adversarios import minimax, alpha_beta
 
 class conecta4(JuegoSumaCeros2T):
     def __init__(self):

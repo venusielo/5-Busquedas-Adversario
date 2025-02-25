@@ -6,6 +6,7 @@ El juego del gato para ilustrar los modelos de juegos
 from juegos_simplificado import ModeloJuegoZT2
 from juegos_simplificado import juega_dos_jugadores
 from juegos_simplificado import minimax
+from juegos_simplificado import alpha_beta
 
 class Gato(ModeloJuegoZT2):
     """

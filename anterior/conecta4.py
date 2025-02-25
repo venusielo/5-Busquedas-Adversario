@@ -10,9 +10,9 @@ Este juego contiene una parte de la tarea 5, y otra parte
 es la implementación desde 0 del juego de Otello.
 
 """
-from busquedas_adversarios import JuegoSumaCeros2T
-from busquedas_adversarios import minimax_t
-from busquedas_adversarios import minimax
+from anterior.busquedas_adversarios import JuegoSumaCeros2T
+from anterior.busquedas_adversarios import minimax_t
+from anterior.busquedas_adversarios import minimax
 from random import shuffle
 import tkinter as tk
 

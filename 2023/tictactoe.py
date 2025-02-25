@@ -1,6 +1,6 @@
-from busquedas_adversarios import JuegoSumaCeros2T
-from busquedas_adversarios import minimax 
-from busquedas_adversarios import alpha_beta
+from anterior.busquedas_adversarios import JuegoSumaCeros2T
+from anterior.busquedas_adversarios import minimax 
+from anterior.busquedas_adversarios import alpha_beta
 
 class Gato(JuegoSumaCeros2T):
     """
