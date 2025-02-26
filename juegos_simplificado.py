@@ -69,7 +69,7 @@ def juega_dos_jugadores(juego, jugador1, jugador2):
         a = jugador1(juego, s, j) if j == 1 else jugador2(juego, s, j)
         s = juego.transicion(s, a, j)
         j = -j
-    return juego.ganancia(s)
+    return juego.ganancia(s), s
 
 
 def minimax(juego, estado, jugador):

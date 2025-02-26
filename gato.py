@@ -120,16 +120,18 @@ def juega_gato(jugador='X'):
     print(f"Las 'X' siempre empiezan y tu juegas con {jugador}")
     
     if jugador == 'X':
-        g = juega_dos_jugadores(juego, jugador_manual_gato, jugador_minimax_gato)
+        g, s = juega_dos_jugadores(juego, jugador_manual_gato, jugador_minimax_gato)
     else:
-        g = juega_dos_jugadores(juego, jugador_minimax_gato, jugador_manual_gato)
-        
+        g, s = juega_dos_jugadores(juego, jugador_minimax_gato, jugador_manual_gato)
+    
+    print("\nSE ACABO EL JUEGO\n")
+    pprint_gato(s)   
     if g == 0:  
-        print("Y termina con un asqueroso empate")
+        print("\nY termina con un asqueroso empate")
     elif (g == 1 and jugador == 'X') or (g == -1 and jugador == 'O'):
-        print("Ganaste, debe ser suerte")
+        print("\nGanaste, debe ser suerte")
     else:
-        print("Perdiste, no tienes remedio, soy muy superior a un simple mortal")
+        print("\nPerdiste, no tienes remedio, soy muy superior a un simple mortal")
         
         
 if __name__ == '__main__':

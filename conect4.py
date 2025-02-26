@@ -27,8 +27,9 @@ empate.
 """
 
 from juegos_simplificado import ModeloJuegoZT2
-from juegos_simplificado import alpha_beta
 from juegos_simplificado import juega_dos_jugadores
+from minimax import jugador_negamax
+from minimax import minimax_iterativo
 
 class Conecta4(ModeloJuegoZT2):
     def inicializa(self):
@@ -97,33 +98,93 @@ def jugador_manual_conecta4(juego, s, j):
         jugada = int(input("Jugada: "))
     return jugada
 
-def jugador_minimax_conecta4(juego, s, j):
-    return alpha_beta(juego, s, j)
+def ordena_centro(jugadas, jugador):
+    """
+    Ordena las jugadas de acuerdo a la distancia al centro
+    """
+    return sorted(jugadas, key=lambda x: abs(x - 4))
+
+def evalua_3con(s):
+    """
+    Evalua el estado s para el jugador 1
+    """
+    conect3 = sum(
+        1 for i in range(7) for j in range(4) 
+        if (s[i + 7 * j] == s[i + 7 * (j + 1)] 
+            == s[i + 7 * (j + 2)] == 1)
+    ) - sum(
+        1 for i in range(7) for j in range(4) 
+        if (s[i + 7 * j] == s[i + 7 * (j + 1)] 
+            == s[i + 7 * (j + 2)] == -1)
+    ) + sum(
+        1 for i in range(6) for j in range(5) 
+        if (s[7 * i + j] == s[7 * i + j + 1] 
+            == s[7 * i + j + 2] == 1)
+    ) - sum(
+        1 for i in range(6) for j in range(5) 
+        if (s[7 * i + j] == s[7 * i + j + 1] 
+            == s[7 * i + j + 2] == -1)
+    ) + sum(
+        1 for i in range(5) for j in range(4) 
+        if (s[i + 7 * j] == s[i + 7 * j + 8] 
+            == s[i + 7 * j + 16] == 1)
+    ) - sum(
+        1 for i in range(5) for j in range(4) 
+        if (s[i + 7 * j] == s[i + 7 * j + 8] 
+            == s[i + 7 * j + 16] == -1)
+    ) + sum(
+        1 for i in range(5) for j in range(4) 
+        if (s[i + 7 * j + 3] == s[i + 7 * j + 9] 
+            == s[i + 7 * j + 15] == 1)
+    ) - sum(
+        1 for i in range(5) for j in range(4) 
+        if (s[i + 7 * j + 3] == s[i + 7 * j + 9] 
+            == s[i + 7 * j + 15] == -1)
+    )
+    promedio = conect3 / (7 * 4 + 6 * 5 + 5 * 4 + 5 * 4)
+    if abs(promedio) >= 1:
+        print("ERROR, evaluación fuera de rango --> ", promedio)
+    return promedio
+
+
     
 if __name__ == '__main__':
 
     modelo = Conecta4()
-
-    print("Vamos a checar si la ganancia está bien, modifica los estados para probar")
-    s = (0, 0,  0, 0, 0,  0,  0,
-         0, 0,  0, 0, 0,  0,  0,
-         0, 0,  0, 1, 0,  0,  1,
-         0, 0,  0, 1, 0,  1, -1,
-         0, 0,  0, 0, 1, -1, -1,
-         1, 0, -1, 1, 1,  1, -1)
-    pprint_conecta4(s)
-    print(modelo.terminal(s))
-    if modelo.terminal(s):
-        print(modelo.ganancia(s))
+    print("="*40 + "\n" + "EL JUEGO DE CONECTA 4".center(40) + "\n" + "="*40)
+    
+    jugs = []
+    for j in [1, -1]:
+        print(f"Selección de jugadores para las {' XO'[j]}:")
+        sel = 0
+        print("   1. Jugador manual")
+        print("   2. Jugador negamax limitado en profundidad")
+        print("   3. Jugador negamax limitado en tiempo")
+        while sel not in [1, 2, 3]:
+            sel = int(input(f"Jugador para las {' XO'[j]}: "))
+    
+        if sel == 1:
+            jugs.append(jugador_manual_conecta4)
+        elif sel == 2:
+            d = None
+            while type(d) != int or d < 1:
+                d = int(input("Profundidad: "))
+            jugs.append(lambda juego, s, j: jugador_negamax(
+                juego, s, j, ordena=ordena_centro, evalua=evalua_3con, d=d)
+            )
+        else:
+            t = None
+            while type(t) != int or t < 1:
+                t = int(input("Tiempo: "))
+            jugs.append(lambda juego, s, j: minimax_iterativo(
+                juego, s, j, ordena=ordena_centro, evalua=evalua_3con, tiempo=t)
+            )
         
-    print("Y ahora a jugar")
-    g = juega_dos_jugadores(
-        modelo, 
-        jugador_manual_conecta4, 
-        jugador_manual_conecta4
-    )
-    if g != 1:
-        print("Gana el jugador " + "XO"[g])
+    g, s_final = juega_dos_jugadores(modelo, jugs[0], jugs[1])
+    print("\nSE ACABO EL JUEGO\n")
+    pprint_conecta4(s_final)
+    if g != 0:
+        print("Gana el jugador " + " XO"[g])
     else:
         print("Empate")
     
