@@ -5,8 +5,9 @@ El juego del gato para ilustrar los modelos de juegos
 
 from juegos_simplificado import ModeloJuegoZT2
 from juegos_simplificado import juega_dos_jugadores
-from juegos_simplificado import minimax
-from juegos_simplificado import alpha_beta
+#from juegos_simplificado import minimax
+#from juegos_simplificado import alpha_beta
+from minimax import jugador_negamax
 
 class Gato(ModeloJuegoZT2):
     """
@@ -106,6 +107,7 @@ def jugador_minimax_gato(juego, s, j):
 
     """
     return minimax(juego, s, j)
+
     
 def juega_gato(jugador='X'):
     """
@@ -120,9 +122,11 @@ def juega_gato(jugador='X'):
     print(f"Las 'X' siempre empiezan y tu juegas con {jugador}")
     
     if jugador == 'X':
-        g, s = juega_dos_jugadores(juego, jugador_manual_gato, jugador_minimax_gato)
+        #g, s = juega_dos_jugadores(juego, jugador_manual_gato, jugador_minimax_gato)
+        g, s = juega_dos_jugadores(juego, jugador_manual_gato, jugador_negamax)
     else:
-        g, s = juega_dos_jugadores(juego, jugador_minimax_gato, jugador_manual_gato)
+        #g, s = juega_dos_jugadores(juego, jugador_minimax_gato, jugador_manual_gato)
+        g, s = juega_dos_jugadores(juego, jugador_negamax, jugador_manual_gato)
     
     print("\nSE ACABO EL JUEGO\n")
     pprint_gato(s)   
@@ -135,4 +139,4 @@ def juega_gato(jugador='X'):
         
         
 if __name__ == '__main__':
-    juega_gato('X')
+    juega_gato('O')

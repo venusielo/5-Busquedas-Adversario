@@ -12,7 +12,7 @@ from random import shuffle
 from time import time
 
 def negamax(
-    juego, estado, jugador, factor=1,
+    juego, estado, jugador,
     alpha=-1e10, beta=1e10, ordena=None, 
     d=None, evalua=None,
     transp={}, traza=[]
@@ -25,7 +25,6 @@ def negamax(
     juego (ModeloJuegoZT): Modelo del juego
     estado (tuple): Estado del juego
     jugador (-1, 1): Jugador que realiza la jugada
-    factor (-1, 1): El jugador para quien estoy buscando
     alpha (float): Limite inferior
     beta (float): Limite superior
     ordena (function:) Funcion de ordenamiento
@@ -54,11 +53,11 @@ def negamax(
         raise ValueError("traza debe ser una lista")
 
     if juego.terminal(estado):
-        return [], factor * juego.ganancia(estado)
+        return [], jugador * juego.ganancia(estado)
     if d == 0:
-        return [], factor * evalua(estado)
-    if estado in transp:
-        return [], transp[estado]
+        return [], jugador * evalua(estado)
+    if d != None and estado in transp and transp[estado][1] >= d:
+        return [], transp[estado][0]
     
     v = -1e10
     jugadas = list(juego.jugadas_legales(estado, jugador))
@@ -72,8 +71,9 @@ def negamax(
             jugadas = [a_pref] + [a for a in jugadas if a != a_pref]
     for a in jugadas:
         traza_actual, v2 = negamax(
-            juego, juego.transicion(estado, a, jugador), -jugador, factor,
-            -beta, -alpha, ordena, d - 1, evalua, transp, traza
+            juego, juego.transicion(estado, a, jugador), -jugador, 
+            -beta, -alpha, ordena, d if d == None else d - 1, 
+            evalua, transp, traza
         )
         v2 = -v2
         if v2 > v:
@@ -84,7 +84,7 @@ def negamax(
             break
         if v > alpha:
             alpha = v
-    transp[estado] = v
+    transp[estado] = (v, d)
     return [mejor] + mejores, v 
 
 
@@ -96,9 +96,9 @@ def jugador_negamax(
     
     """
     traza, _ = negamax(
-        juego=juego, estado=estado, jugador=jugador, factor=jugador,
-        alpha=-1e10, beta=1e10, ordena=ordena, d=d, evalua=evalua,
-        transp={}, traza=[])
+        juego=juego, estado=estado, jugador=jugador, 
+        alpha=-1e10, beta=1e10, ordena=ordena, d=d, 
+        evalua=evalua, transp={}, traza=[])
     return traza[0]
 
 
@@ -115,7 +115,7 @@ def minimax_iterativo(
     d, traza = 2, []
     while time() - t0 < tiempo/2:
         traza, v = negamax(
-            juego=juego, estado=estado, jugador=jugador, factor=jugador, 
+            juego=juego, estado=estado, jugador=jugador,  
             alpha=-1e10, beta=1e10, ordena=ordena, d=d, evalua=evalua, 
             transp={}, traza=traza
         )
